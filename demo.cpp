@@ -8,8 +8,8 @@
 using namespace std;
 using namespace asr_stream_sdk;
 
-string g_clientid           = "37ce1e17-c3e8-47ce-bf7b-154860ac5365";               //从标贝获取的clientid和secret
-string g_secret             = "ZGRhZDU1ZGQtMTdjOC00ZGM1LTllMWYtZWM4MGE1YTMxNzUz";
+string g_clientid           = "";               //从标贝获取的clientid和secret
+string g_secret             = "";
 string g_server_url_16k     = "wss://asr.data-baker.com/wss";  //16k识别服务的url
 string g_server_url_8k      = "wss://asr.data-baker.com/wss"; //8k识别服务的url
 
