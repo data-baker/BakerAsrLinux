@@ -1,6 +1,6 @@
  
 
-# 标贝科技实时语音识别服务Linux SDK使用说明文档
+# 标贝科技实时语音识别服务Linux SDK使用说明文档										私有化分支
 
  
 
@@ -26,9 +26,7 @@
 
 | 方法                   | 参数说明                                             | 说明                    |
 | ---------------------- | ---------------------------------------------------- | ----------------------- |
-| int init(…)            | string client_id                                     | 从标贝获取的client id   |
-|                        | string secret                                        | 从标贝获取的secret      |
-|                        | string server_url                                    | websockt服务地址        |
+| int init(…)            | string server_url                                    | websockt服务地址        |
 |                        | string audio_format                                  | 音频格式，pcm、wav      |
 |                        | uint32_t sample_rate                                 | 采样率，8000、16000     |
 |                        | boost::shared_ptr\<ClientListener\>  client_listener | 回调类指针              |
@@ -107,9 +105,6 @@
 | 90003      | 任务失败，返回结果缺少必要字段 |                                        |
 | 90004      | 任务失败，任务超时             |                                        |
 | 90005      | 任务失败，其他错误             |                                        |
-| 90006      | 任务失败，获取token失败        | 同上                                   |
-| 90007      | clientid不支持asr功能          | 更换正确的clientid                     |
-| 90008      | clientid或secret错误           | 更换正确的clientid或secret             |
 |            |                                |                                        |
 | 30001      | HTTP请求参数错误               | 偶现忽略，重复出现可反馈trace_id给开发 |
 | 30002      | 服务内部错误                   |                                        |
