@@ -8,7 +8,11 @@ namespace asr_stream_sdk {
 class SpeechManager
 {
 public:
-    SpeechManager():_recv_last_segment(false), _inited(false), _push_frame_thread(NULL), _push_thread_running(true) {};
+    SpeechManager():_recv_last_segment(false),
+                    _inited(false),
+                    _recv_first_segment(false),
+                    _push_frame_thread(NULL),
+                    _push_thread_running(true) {};
     virtual ~SpeechManager()
     {
         destroyPushFrameThread();
@@ -93,6 +97,7 @@ public:
     boost::shared_ptr<ClientListener>  _client_listener;
     boost::mutex     _api_mutex;
     volatile bool    _inited;
+    bool             _recv_first_segment;
 
     boost::thread*   _push_frame_thread;
     volatile bool    _push_thread_running;
