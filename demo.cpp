@@ -8,10 +8,8 @@
 using namespace std;
 using namespace asr_stream_sdk;
 
-string g_clientid           = "";               //从标贝获取的clientid和secret
-string g_secret             = "";
-string g_server_url_16k     = "wss://asr.data-baker.com/wss";  //16k识别服务的url
-string g_server_url_8k      = "wss://asr.data-baker.com/wss"; //8k识别服务的url
+string g_server_url_16k     = "ws://192.168.1.21:9002";  //私有化部署的16k识别服务的url
+string g_server_url_8k      = "ws://192.168.1.33:29002"; //私有化部署的8k识别服务的url
 
 uint32_t getRandUInt(uint32_t start, uint32_t end)  //获取指定范围随机数
 {
@@ -120,7 +118,7 @@ int main(int argc, char* argv[])
         sample_rate = 8000;
         server_url = g_server_url_8k;
     }
-    speech_manager->init(g_clientid, g_secret, server_url, audio_format, sample_rate, client_listener);  //初始化
+    speech_manager->init(server_url, audio_format, sample_rate, client_listener);  //初始化
     sendRequestFrame(speech_manager);                                                                    //规律发送音频包
 
 }

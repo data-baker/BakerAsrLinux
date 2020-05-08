@@ -22,21 +22,17 @@ public:
     /********************************************************************************************
     **	@func 初始化，每个SpeechManager实例必须init一次
     **
-    **	@param client_id        从标贝申请的clientid
-    **         secret           从标贝申请的secret
-    **         server_url       流式合成url, eg wss://asr.data-baker.com/wss
+    **	@param server_url       流式合成url, eg wss://asr.data-baker.com/wss
     **         audio_format     音频格式, eg pcm, wav
     **         sample_rate      音频采样率, eg 16000, 8000
     **         client_listener  回调指针
     **
     **	@return 成功返回0，失败返回-1
     ********************************************************************************************/
-    int init(std::string& client_id,
-                  std::string& secret,
-                  std::string& server_url,
-                  std::string& audio_format,
-                  uint32_t sample_rate,
-                  boost::shared_ptr<ClientListener> client_listener);
+    int init(std::string& server_url,
+             std::string& audio_format,
+             uint32_t sample_rate,
+             boost::shared_ptr<ClientListener> client_listener);
 
     /********************************************************************************************
     **  @func 处理音频片段，每160ms的音频数据作为一个片段
@@ -91,8 +87,6 @@ public:
     bool             _enable_itn;
     std::string      _domain;
     boost::shared_ptr<WSFrameManager>  _ws_frame_manager;
-    std::string      _client_id;
-    std::string      _secret;
     std::string      _server_url;
     boost::shared_ptr<ClientListener>  _client_listener;
     boost::mutex     _api_mutex;

@@ -7,7 +7,7 @@
 
 #define gettid() syscall(SYS_gettid)
 
-#define WSS_URL 1
+#define WSS_URL 0
 
 //void onLog(std::string log);
 
@@ -35,9 +35,6 @@ enum SdkCallbackErrorCode
     Failed_json_incomplete              = 90003,         //服务端返回的信息不全
     Failed_task_timeout                 = 90004,         //任务超时
     Failed_other_error                  = 90005,         //其它错误
-    Failed_get_token_error              = 90006,         //获取token失败
-    Failed_not_asr_clientid             = 90007,         //clientid不支持asr功能
-    Failed_invalid_clientid_or_secret   = 90008          //clientid或secret错误
 };
 
 enum TaskStatus
@@ -83,7 +80,7 @@ public:
 class WSFrameManager
 {
 public:
-    WSFrameManager(std::string& client_id, std::string& secret, std::string server_url, boost::shared_ptr<ClientListener> client_listener);
+    WSFrameManager(std::string server_url, boost::shared_ptr<ClientListener> client_listener);
     virtual ~WSFrameManager();
     std::string genJsonRequest(boost::shared_ptr<WSFrame> speech_frame);
     void sendRequestFrame(websocketpp::connection_hdl hdl, boost::shared_ptr<WSFrame> speech_frame);
@@ -97,7 +94,6 @@ public:
     void taskFailed(int32_t error_code, std::string& message);
     void taskCompleted();
     void getTaskResult(std::list<std::string>& nbest, std::list<std::string>& uncertain);
-    bool getToken();
 #if WSS_URL
     context_ptr on_tls_init(websocketpp::connection_hdl);
 #endif
@@ -108,8 +104,6 @@ public:
 
 public:
     std::string                        _token;
-    std::string                        _client_id;
-    std::string                        _secret;
     std::string                        _server_url;
     boost::shared_ptr<ClientListener>  _client_listener;
     volatile TaskStatus                _task_status;
