@@ -47,17 +47,17 @@
 
 ​    类成员方法：
 
-| 方法                     | 参数                                     | 说明                              |
-| ------------------------ | ---------------------------------------- | --------------------------------- |
-| void onTaskStarted()     | 无参数                                   |                                   |
-| void onTextReceived(…)   | uint32_t idx                             | 文本序号，暂时忽略                |
-| list\<string>  nbest     | 识别结果，取第一个                       |                                   |
-| list\<string>  uncertain | 预测结果，暂无                           |                                   |
-| void onTaskCompleted()   | 无参数                                   | 任务完成                          |
-| void onTaskFailed()      | uint32_t code                            | 错误码                            |
-| string info              | 提示信息                                 |                                   |
-| string trace_id          | 跟踪id，偶现忽略，重复出现反馈给开发人员 |                                   |
-| void onLog               | string log                               | sdk内部生成的日志，默认打印到终端 |
+| 方法                   | 参数                     | 说明                                     |
+| ---------------------- | ------------------------ | ---------------------------------------- |
+| void onTaskStarted()   | 无参数                   |                                          |
+| void onTextReceived(…) | uint32_t idx             | 文本序号，暂时忽略                       |
+|                        | list\<string>  nbest     | 识别结果，取第一个                       |
+|                        | list\<string>  uncertain | 预测结果，暂无                           |
+| void onTaskCompleted() | 无参数                   | 任务完成                                 |
+| void onTaskFailed()    | uint32_t code            | 错误码                                   |
+|                        | string info              | 提示信息                                 |
+|                        | string trace_id          | 跟踪id，偶现忽略，重复出现反馈给开发人员 |
+| void onLog             | string log               | sdk内部生成的日志，默认打印到终端        |
 
  
 
