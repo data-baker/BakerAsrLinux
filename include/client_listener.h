@@ -28,7 +28,7 @@ public:
     {
         onLog(LogLevel_notice, "onTaskStarted called. start task.");
     }
-    virtual void onTextReceived(uint32_t idx, std::list<std::string>& nbest, std::list<std::string>& uncertain)
+    virtual void onTextReceived(uint32_t idx, std::list<std::string>& nbest, std::list<std::string>& uncertain, bool is_final)
     {
         std::ostringstream oss;
         std::string nbest0;
@@ -45,6 +45,7 @@ public:
                                                                     << "idx["            << idx
                                                                     << "], nbest0["      << nbest0
                                                                     << "], uncertain0["  << uncertain0
+                                                                    << "], is_final["    << is_final
                                                                     << "]";
         onLog(LogLevel_notice, oss.str());
     }
@@ -62,7 +63,7 @@ public:
             << "]";
         onLog(LogLevel_notice, oss.str());
     }
-    virtual void onLog(LogLevel log_level, std::string log)
+    virtual void onLog(LogLevel log_level, const std::string& log)
     {
         fprintf(stderr, "thread_id[%ld] -- log level[%d] log info[%s]\n", gettid(), log_level, log.c_str());
     }

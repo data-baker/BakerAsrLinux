@@ -16,7 +16,7 @@ public:
     {
         onLog(LogLevel_notice, "onTaskStarted called. start task.");
     }
-    void onTextReceived(uint32_t idx, std::list<std::string>& nbest, std::list<std::string>& uncertain)
+    void onTextReceived(uint32_t idx, std::list<std::string>& nbest, std::list<std::string>& uncertain, bool is_final)
     {
         std::ostringstream oss;
         std::string nbest0;
@@ -33,6 +33,7 @@ public:
                                                         << "idx["            << idx
                                                         << "], nbest0["      << nbest0
                                                         << "], uncertain0["  << uncertain0
+                                                        << "], is_final["    << is_final
                                                         << "]";
         onLog(LogLevel_notice, oss.str());
     }

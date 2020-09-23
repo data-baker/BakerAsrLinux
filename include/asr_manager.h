@@ -10,7 +10,7 @@ class SpeechManager
 public:
     SpeechManager():_recv_last_segment(false),
                     _inited(false),
-                    _recv_first_segment(false),
+                    _open_conn(false),
                     _push_frame_thread(NULL),
                     _push_thread_running(true) {};
     virtual ~SpeechManager()
@@ -27,6 +27,7 @@ public:
     **         server_url       流式合成url, eg wss://asr.data-baker.com/wss
     **         audio_format     音频格式, eg pcm, wav
     **         sample_rate      音频采样率, eg 16000, 8000
+    **         recog_timeout    识别处理超时时间, 单位ms
     **         client_listener  回调指针
     **
     **	@return 成功返回0，失败返回-1
@@ -36,7 +37,37 @@ public:
                   std::string& server_url,
                   std::string& audio_format,
                   uint32_t sample_rate,
+                  uint32_t recog_timeout,
                   boost::shared_ptr<ClientListener> client_listener);
+   /********************************************************************************************
+    **	@func 初始化，每个SpeechManager实例必须init一次
+    **
+    **	@param client_id        从标贝申请的clientid
+    **         secret           从标贝申请的secret
+    **         server_url       流式合成url, eg wss://asr.data-baker.com/wss
+    **         audio_format     音频格式, eg pcm, wav
+    **         sample_rate      音频采样率, eg 16000, 8000
+    **         client_listener  回调指针
+    **
+    **	@return 成功返回0，失败返回-1
+    ********************************************************************************************/
+    int init(std::string& client_id,
+                  std::string& secret,
+                  std::string& server_url,
+                  std::string& audio_format,
+                  uint32_t sample_rate,
+                  boost::shared_ptr<ClientListener> client_listener) {
+        init(client_id, secret, server_url, audio_format, sample_rate, 120000, client_listener);
+    }
+    /********************************************************************************************
+    **  @func  是否已经与服务建立连接jj
+    **
+    **
+    **  @return true/false
+    ********************************************************************************************/
+    bool has_open_conn() {
+        return _open_conn;
+    }
 
     /********************************************************************************************
     **  @func 处理音频片段，每160ms的音频数据作为一个片段
@@ -97,7 +128,7 @@ public:
     boost::shared_ptr<ClientListener>  _client_listener;
     boost::mutex     _api_mutex;
     volatile bool    _inited;
-    bool             _recv_first_segment;
+    volatile bool    _open_conn;
 
     boost::thread*   _push_frame_thread;
     volatile bool    _push_thread_running;

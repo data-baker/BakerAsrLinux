@@ -83,7 +83,7 @@ public:
 class WSFrameManager
 {
 public:
-    WSFrameManager(std::string& client_id, std::string& secret, std::string server_url, boost::shared_ptr<ClientListener> client_listener);
+    WSFrameManager(std::string& client_id, std::string& secret, std::string server_url, boost::shared_ptr<ClientListener> client_listener, uint32_t recog_timeout);
     virtual ~WSFrameManager();
     std::string genJsonRequest(boost::shared_ptr<WSFrame> speech_frame);
     void sendRequestFrame(websocketpp::connection_hdl hdl, boost::shared_ptr<WSFrame> speech_frame);
@@ -98,6 +98,8 @@ public:
     void taskCompleted();
     void getTaskResult(std::list<std::string>& nbest, std::list<std::string>& uncertain);
     bool getToken();
+    void timedWaitFrameIn();
+    void notifySendThread();
 #if WSS_URL
     context_ptr on_tls_init(websocketpp::connection_hdl);
 #endif
@@ -112,6 +114,7 @@ public:
     std::string                        _secret;
     std::string                        _server_url;
     boost::shared_ptr<ClientListener>  _client_listener;
+    uint32_t                           _recog_timeout;
     volatile TaskStatus                _task_status;
     std::string                        _text;
     int32_t                            _error_code;        //任务失败时的json response中的code字段
@@ -133,6 +136,8 @@ public:
     std::list<std::string>             _nbest;
     std::list<std::string>             _uncertain;
     boost::mutex                       _nbest_mutex;
+    boost::mutex                       _cond_mutex;
+    boost::condition_variable     _cond;
 };
 }
 #endif
