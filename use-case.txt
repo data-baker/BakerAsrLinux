@@ -1,0 +1,2 @@
+./demo 16000 ./16k.wav wss://asr.data-baker.com/wss common
+./demo 8000 ./08k.wav wss://asr.data-baker.com/wss common

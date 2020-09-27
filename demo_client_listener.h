@@ -51,9 +51,9 @@ public:
                                                     << "]";
         onLog(LogLevel_notice, oss.str());
     }
-    void onLog(LogLevel log_level, std::string log)
+    void onLog(LogLevel log_level, const std::string& log)
     {
-        if((int)log_level > (int)LogLevel_debug)
+        if((int)log_level >= (int)LogLevel_debug)
         {
             fprintf(stdout, "thread_id[%ld] -- log level[%d] log info[%s]\n", gettid(), log_level, log.c_str());
         }

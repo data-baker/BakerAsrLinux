@@ -24,20 +24,23 @@
 
 ​    类成员方法：
 
-| 方法                   | 参数说明                                             | 说明                    |
-| ---------------------- | ---------------------------------------------------- | ----------------------- |
-| int init(…)            | string client_id                                     | 从标贝获取的client id   |
-|                        | string secret                                        | 从标贝获取的secret      |
-|                        | string server_url                                    | websockt服务地址        |
-|                        | string audio_format                                  | 音频格式，pcm、wav      |
-|                        | uint32_t sample_rate                                 | 采样率，8000、16000     |
-|                        | boost::shared_ptr\<ClientListener\>  client_listener | 回调类指针              |
-| int procSpeechData (…) | string speech_data                                   | **160ms的原始音频数据** |
-|                        | bool last_frame                                      | 是否是最后一包音频数据  |
-| void getTaskResult(…)  | list\<string\> nbest                                 | nbest结果集             |
-|                        | list\<string\> uncertain                             | 预测结果集              |
-| getTaskStatus()        | 无                                                   | 获取任务状态            |
-| int stopTask()         | 无参数                                               | 停止当前识别任务        |
+| 方法                   | 参数说明                                             | 说明                         |
+| ---------------------- | ---------------------------------------------------- | ---------------------------- |
+| int init(…)            | string client_id                                     | 从标贝获取的client id        |
+|                        | string secret                                        | 从标贝获取的secret           |
+|                        | string server_url                                    | websockt服务地址             |
+|                        | string audio_format                                  | 音频格式，pcm、wav           |
+|                        | uint32_t sample_rate                                 | 采样率，8000、16000          |
+|                        | bool add_pct                                         | 是否在短静音处添加标点       |
+|                        | bool enable_itn                                      | 逆文本处理(识别为阿拉伯数字) |
+|                        | string domain                                        | 模型,如common                |
+|                        | boost::shared_ptr\<ClientListener\>  client_listener | 回调类指针                   |
+| int procSpeechData (…) | string speech_data                                   | **160ms的原始音频数据**      |
+|                        | bool last_frame                                      | 是否是最后一包音频数据       |
+| void getTaskResult(…)  | list\<string\> nbest                                 | nbest结果集                  |
+|                        | list\<string\> uncertain                             | 预测结果集                   |
+| getTaskStatus()        | 无                                                   | 获取任务状态                 |
+| int stopTask()         | 无参数                                               | 停止当前识别任务             |
 
  
 

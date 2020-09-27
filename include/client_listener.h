@@ -22,7 +22,7 @@ class ClientListener
 {
 
 public:
-    ClientListener() {};
+    ClientListener(): _other_param(NULL) {};
     virtual ~ClientListener() {};
     virtual void onTaskStarted()
     {
@@ -67,6 +67,8 @@ public:
     {
         fprintf(stderr, "thread_id[%ld] -- log level[%d] log info[%s]\n", gettid(), log_level, log.c_str());
     }
+public:
+    void*               _other_param;
 };
 }
 
