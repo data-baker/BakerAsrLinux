@@ -8,8 +8,9 @@
 using namespace std;
 using namespace asr_stream_sdk;
 
-string g_server_url_16k     = "ws://192.168.1.19:9002";  //私有化部署的16k识别服务的url
-string g_server_url_8k      = "ws://192.168.1.19:9002"; //私有化部署的8k识别服务的url
+string g_server_url_16k     = "ws://192.168.1.19:9002";  //16k识别服务的url
+string g_server_url_8k      = "ws://192.168.1.19:9002"; //8k识别服务的url
+char* param_file_path = NULL;
 
 uint32_t getRandUInt(uint32_t start, uint32_t end)  //获取指定范围随机数
 {
@@ -26,11 +27,7 @@ static void sendRequestFrame(boost::shared_ptr<SpeechManager> speech_manager)
     ostringstream oss;
     char * audio_buf = (char *)malloc(1024 * 1024);
     char *speech_audio_buf = (char*)malloc(1024 * 1024);
-    string audio_file_name = "./16k.wav";  //从文件中读取音频流来模拟实时流
-    if(speech_manager->_sample_rate == 8000)
-    {
-        audio_file_name = "./08k.wav";
-    }
+    string audio_file_name = param_file_path;  //从文件中读取音频流来模拟实时流
     FILE * fs = fopen(audio_file_name.c_str(), "rb");
     if (fs == NULL) {
         oss << "Error: fopen file: " <<  audio_file_name << " failed. error: " << strerror(errno);
@@ -44,11 +41,15 @@ static void sendRequestFrame(boost::shared_ptr<SpeechManager> speech_manager)
     int size = 0;
     int total_size = 0;
     bool last = false;  //last用于确认是不是最后一个音频包
-
-    while ((size = fread(audio_buf, 1, 5120 , fs)) != 0) {  //5120 = 16000 * 2 * 0.16ms，取160ms的音频
+    int package_len = 5120;
+    if(speech_manager->_sample_rate == 8000)
+    {
+        package_len = 2560;
+    }
+    while ((size = fread(audio_buf, 1, package_len, fs)) != 0) {  //5120 = 16000 * 2 * 0.16ms，取160ms的音频
             total_size += size;
             if (total_size >= filesize) {
-                last = true;  //必须有最后一包音频
+                last = true;  //必须有最后一包音频，最后一包audio_data可以为空
             }
 
             string audio_data(audio_buf, size);
@@ -61,7 +62,6 @@ static void sendRequestFrame(boost::shared_ptr<SpeechManager> speech_manager)
                 select(0, NULL, NULL, NULL, &wait_time);  //等待160ms，用于模拟实时流
             }
     }
-
 /***************************************************************************************************************/
 //这部分代码仅用于演示通过getTaskStatus和getTaskResult方法实现阻塞的目的，其实识别结果和任务状态也会通过回调返回
     while(true)
@@ -108,17 +108,38 @@ static void sendRequestFrame(boost::shared_ptr<SpeechManager> speech_manager)
 
 int main(int argc, char* argv[])
 {
+    if(!(argc == 3 || argc == 4 || argc == 5))
+    {
+        printf("Usage: ./xxx sample_rate audio_file [ws_server_url] [domain]\n");
+        return 0;
+    }
+    int param_sample = atoi(argv[1]);
+    if(!(param_sample == 8000 || param_sample == 16000))
+    {
+        printf("sample rate is 8000 or 16000\n");
+        return 0;
+    }
+    param_file_path = argv[2];   
     boost::shared_ptr<ClientListener> client_listener(new(std::nothrow) MyClientListener());  //实例化MyClientListener
     boost::shared_ptr<SpeechManager> speech_manager(new(std::nothrow) SpeechManager());       //实例化SpeechManager
     string audio_format = "wav";
     uint32_t sample_rate = 16000;
     string server_url = g_server_url_16k;
-    if(getRandUInt(0, 1) == 1)        //获取随机数，用于选择进行8k还是16k识别
+    if(param_sample == 8000)
     {
         sample_rate = 8000;
         server_url = g_server_url_8k;
     }
-    speech_manager->init(server_url, audio_format, sample_rate, client_listener);  //初始化
+    string domain = "common";  //默认使用common模型，如需使用其它模型，请在启动参数中指定
+    if(argc >= 4)
+    {
+        server_url = string(argv[3]);
+        if(argc == 5)
+        {
+            domain = string(argv[4]);
+        }
+    }
+    speech_manager->init(server_url, audio_format, sample_rate, false, false, domain, client_listener);  //初始化
     sendRequestFrame(speech_manager);                                                                    //规律发送音频包
 
 }

@@ -22,9 +22,12 @@ public:
     /********************************************************************************************
     **	@func 初始化，每个SpeechManager实例必须init一次
     **
-    **	@param server_url       流式合成url, eg wss://asr.data-baker.com/wss
+    **	@param server_url       流式识别url, eg wss://asr.data-baker.com/wss
     **         audio_format     音频格式, eg pcm, wav
     **         sample_rate      音频采样率, eg 16000, 8000
+    **         add_pct          是否在短静音处添加标点
+    **         enable_itn       逆文本处理
+    **         domain           模型,如common
     **         recog_timeout    识别处理超时时间, 单位ms
     **         client_listener  回调指针
     **
@@ -33,6 +36,9 @@ public:
     int init(std::string& server_url,
              std::string& audio_format,
              uint32_t sample_rate,
+             bool add_pct,
+             bool enable_itn,
+             std::string& domain,
              uint32_t recog_timeout,
              boost::shared_ptr<ClientListener> client_listener);
    /********************************************************************************************
@@ -40,18 +46,25 @@ public:
     **
     **	@param client_id        从标贝申请的clientid
     **         secret           从标贝申请的secret
-    **         server_url       流式合成url, eg wss://asr.data-baker.com/wss
+    **         server_url       流式识别url, eg wss://asr.data-baker.com/wss
     **         audio_format     音频格式, eg pcm, wav
     **         sample_rate      音频采样率, eg 16000, 8000
+    **         add_pct          是否在短静音处添加标点
+    **         enable_itn       逆文本处理
+    **         domain           模型,如common
     **         client_listener  回调指针
     **
     **	@return 成功返回0，失败返回-1
     ********************************************************************************************/
     int init(std::string& server_url,
-                  std::string& audio_format,
-                  uint32_t sample_rate,
-                  boost::shared_ptr<ClientListener> client_listener) {
-        return init(server_url, audio_format, sample_rate, 120000, client_listener);
+             std::string& audio_format,
+             uint32_t sample_rate,
+             bool add_pct,
+             bool enable_itn,
+             std::string& domain,
+             boost::shared_ptr<ClientListener> client_listener)
+    {
+        return init(server_url, audio_format, sample_rate, add_pct, enable_itn, domain, 120000, client_listener);
     }
     /********************************************************************************************
     **  @func  是否已经与服务建立连接jj
